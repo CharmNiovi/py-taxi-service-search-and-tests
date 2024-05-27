@@ -1,3 +1,4 @@
+import pytest
 from django.contrib.auth import get_user_model
 from django.test import TestCase
 from django.urls import reverse
@@ -7,90 +8,27 @@ from taxi.models import Car, Manufacturer
 
 class PublicTaxiTest(TestCase):
     def test_login_required(self):
-        response = self.client.get(reverse("taxi:index"))
-        self.assertNotEqual(response.status_code, 200)
-
-    def test_manufacturer_list_login_required(self):
-        response = self.client.get(reverse("taxi:manufacturer-list"))
-        self.assertNotEqual(response.status_code, 200)
-
-    def test_manufacturer_update_login_required(self):
-        response = self.client.get(
-            reverse("taxi:manufacturer-update", kwargs={"pk": 1})
-        )
-        self.assertNotEqual(response.status_code, 200)
-
-    def test_manufacturer_delete_login_required(self):
-        response = self.client.get(
-            reverse("taxi:manufacturer-delete", kwargs={"pk": 1})
-        )
-        self.assertNotEqual(response.status_code, 200)
-
-    def test_manufacturer_create_login_required(self):
-        response = self.client.get(
-            reverse("taxi:manufacturer-create")
-        )
-        self.assertNotEqual(response.status_code, 200)
-
-    def test_car_detail_login_required(self):
-        response = self.client.get(
-            reverse("taxi:car-detail", kwargs={"pk": 1})
-        )
-        self.assertNotEqual(response.status_code, 200)
-
-    def test_car_list_login_required(self):
-        response = self.client.get(
-            reverse("taxi:car-list")
-        )
-        self.assertNotEqual(response.status_code, 200)
-
-    def test_car_update_login_required(self):
-        response = self.client.get(
-            reverse("taxi:car-update", kwargs={"pk": 1})
-        )
-        self.assertNotEqual(response.status_code, 200)
-
-    def test_car_create_login_required(self):
-        response = self.client.get(
-            reverse("taxi:car-create")
-        )
-        self.assertNotEqual(response.status_code, 200)
-
-    def test_car_delete_login_required(self):
-        response = self.client.get(
-            reverse("taxi:car-delete", kwargs={"pk": 1})
-        )
-        self.assertNotEqual(response.status_code, 200)
-
-    def test_driver_detail_login_required(self):
-        response = self.client.get(
-            reverse("taxi:driver-detail", kwargs={"pk": 1})
-        )
-        self.assertNotEqual(response.status_code, 200)
-
-    def test_driver_list_login_required(self):
-        response = self.client.get(
-            reverse("taxi:driver-list")
-        )
-        self.assertNotEqual(response.status_code, 200)
-
-    def test_driver_update_login_required(self):
-        response = self.client.get(
-            reverse("taxi:driver-update", kwargs={"pk": 1})
-        )
-        self.assertNotEqual(response.status_code, 200)
-
-    def test_driver_create_login_required(self):
-        response = self.client.get(
-            reverse("taxi:driver-create")
-        )
-        self.assertNotEqual(response.status_code, 200)
-
-    def test_driver_delete_login_required(self):
-        response = self.client.get(
-            reverse("taxi:driver-delete", kwargs={"pk": 1})
-        )
-        self.assertNotEqual(response.status_code, 200)
+        urls = [
+            ("taxi:index", {}),
+            ("taxi:manufacturer-list", {}),
+            ("taxi:manufacturer-update", {"pk": 1}),
+            ("taxi:manufacturer-delete", {"pk": 1}),
+            ("taxi:manufacturer-create", {}),
+            ("taxi:car-detail", {"pk": 1}),
+            ("taxi:car-list", {}),
+            ("taxi:car-update", {"pk": 1}),
+            ("taxi:car-create", {}),
+            ("taxi:car-delete", {"pk": 1}),
+            ("taxi:driver-detail", {"pk": 1}),
+            ("taxi:driver-list", {}),
+            ("taxi:driver-update", {"pk": 1}),
+            ("taxi:driver-create", {}),
+            ("taxi:driver-delete", {"pk": 1}),
+        ]
+        for url_name, kwargs in urls:
+            with self.subTest(url_name=url_name, kwargs=kwargs):
+                response = self.client.get(reverse(url_name, kwargs=kwargs))
+                self.assertNotEqual(response.status_code, 200)
 
 
 class PrivateTaxiTest(TestCase):
