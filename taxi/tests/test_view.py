@@ -1,3 +1,4 @@
+import pytest
 from django.contrib.auth import get_user_model
 from django.test import TestCase
 from django.urls import reverse
@@ -5,29 +6,31 @@ from django.urls import reverse
 from taxi.models import Car, Manufacturer
 
 
-class PublicTaxiTest(TestCase):
-    def test_login_required(self):
-        urls = [
-            ("taxi:index", {}),
-            ("taxi:manufacturer-list", {}),
-            ("taxi:manufacturer-update", {"pk": 1}),
-            ("taxi:manufacturer-delete", {"pk": 1}),
-            ("taxi:manufacturer-create", {}),
-            ("taxi:car-detail", {"pk": 1}),
-            ("taxi:car-list", {}),
-            ("taxi:car-update", {"pk": 1}),
-            ("taxi:car-create", {}),
-            ("taxi:car-delete", {"pk": 1}),
-            ("taxi:driver-detail", {"pk": 1}),
-            ("taxi:driver-list", {}),
-            ("taxi:driver-update", {"pk": 1}),
-            ("taxi:driver-create", {}),
-            ("taxi:driver-delete", {"pk": 1}),
-        ]
-        for url_name, kwargs in urls:
-            with self.subTest(url_name=url_name, kwargs=kwargs):
-                response = self.client.get(reverse(url_name, kwargs=kwargs))
-                self.assertNotEqual(response.status_code, 200)
+@pytest.mark.django_db
+@pytest.mark.parametrize(
+    "url_name,url_kwargs",
+    [
+        ("taxi:index", {}),
+        ("taxi:manufacturer-list", {}),
+        ("taxi:manufacturer-update", {"pk": 1}),
+        ("taxi:manufacturer-delete", {"pk": 1}),
+        ("taxi:manufacturer-create", {}),
+        ("taxi:car-detail", {"pk": 1}),
+        ("taxi:car-list", {}),
+        ("taxi:car-update", {"pk": 1}),
+        ("taxi:car-create", {}),
+        ("taxi:car-delete", {"pk": 1}),
+        ("taxi:driver-detail", {"pk": 1}),
+        ("taxi:driver-list", {}),
+        ("taxi:driver-update", {"pk": 1}),
+        ("taxi:driver-create", {}),
+        ("taxi:driver-delete", {"pk": 1}),
+    ]
+)
+def test_login_required(client, url_name, url_kwargs):
+    url = reverse(url_name, kwargs=url_kwargs)
+    response = client.get(url)
+    assert response.status_code != 200
 
 
 class PrivateTaxiTest(TestCase):
