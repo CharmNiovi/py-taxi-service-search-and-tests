@@ -25,6 +25,23 @@ from taxi.models import Car, Manufacturer
         ("taxi:driver-update", {"pk": 1}),
         ("taxi:driver-create", {}),
         ("taxi:driver-delete", {"pk": 1}),
+    ],
+    ids=[
+        "test_index",
+        "test_manufacturer_list",
+        "test_manufacturer_update",
+        "test_manufacturer_delete",
+        "test_manufacturer_create",
+        "test_car_detail",
+        "test_car_list",
+        "test_car_update",
+        "test_car_create",
+        "test_car_delete",
+        "test_driver_detail",
+        "test_driver_list",
+        "test_driver_update",
+        "test_driver_create",
+        "test_driver_delete",
     ]
 )
 def test_login_required(client, url_name, url_kwargs):
